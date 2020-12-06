@@ -24,11 +24,11 @@ import zipfile
 import os
 import shutil
 import polib
-
+from tempfile import gettempdir
 MYCROFT_SKILLS_DIR = '/opt/mycroft/skills'
 MYCROFT_LOCALE = 'ca-es'
 POOTLE_LOCALE = 'ca'
-WORKING_DIR = './tmp/'
+WORKING_DIR = os.path.join(gettempdir(), "pootle")
 POFILES_DIR = WORKING_DIR + POOTLE_LOCALE + '-mycroft-skills/' + POOTLE_LOCALE + '/mycroft-skills/'
 
 
@@ -38,7 +38,8 @@ def get_list_of_skills(path):
 
 
 def get_list_of_pofiles():
-    pathlib.Path(WORKING_DIR).mkdir(parents=True, exist_ok=True)
+    if not os.path.isdir(WORKING_DIR):
+        pathlib.Path(WORKING_DIR).mkdir(parents=True)
 
     print('Getting Pootle strings from \'' + POOTLE_LOCALE + ' locale...')
     url = 'https://translate.mycroft.ai/export/?path=/' + POOTLE_LOCALE + '/mycroft-skills'
