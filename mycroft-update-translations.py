@@ -29,7 +29,7 @@ MYCROFT_SKILLS_DIR = '/opt/mycroft/skills'
 MYCROFT_LOCALE = 'ca-es'
 POOTLE_LOCALE = 'ca'
 WORKING_DIR = os.path.join(gettempdir(), "pootle")
-POFILES_DIR = WORKING_DIR + POOTLE_LOCALE + '-mycroft-skills/' + POOTLE_LOCALE + '/mycroft-skills/'
+POFILES_DIR = os.path.join(WORKING_DIR, POOTLE_LOCALE + '-mycroft-skills', POOTLE_LOCALE, 'mycroft-skills/')
 
 
 def get_list_of_skills(path):
