@@ -29,7 +29,7 @@ MYCROFT_SKILLS_DIR = '/opt/mycroft/skills'
 MYCROFT_LOCALE = 'ca-es'
 POOTLE_LOCALE = 'ca'
 WORKING_DIR = os.path.join(gettempdir(), "pootle")
-POFILES_DIR = os.path.join(WORKING_DIR, POOTLE_LOCALE + '-mycroft-skills', POOTLE_LOCALE, 'mycroft-skills/')
+POFILES_DIR = os.path.join(WORKING_DIR, POOTLE_LOCALE + '-mycroft-skills', POOTLE_LOCALE, 'mycroft-skills')
 
 
 def get_list_of_skills(path):
@@ -46,7 +46,8 @@ def get_list_of_pofiles():
     urllib.request.urlretrieve(url, WORKING_DIR + 'export.zip')
 
     print('Unzipping export.zip...')
-    with zipfile.ZipFile(WORKING_DIR + 'export.zip', 'r') as zip_ref:
+    with zipfile.ZipFile(os.path.join(WORKING_DIR, 'export.zip'), 'r') as \
+            zip_ref:
         zip_ref.extractall(WORKING_DIR)
 
     return [os.path.join(POFILES_DIR, f) for f in os.listdir(POFILES_DIR) if
@@ -64,7 +65,7 @@ def get_pofile(skill):
 
     if skill_name[:8] == 'mycroft-' and skill_name[-10:] == '.mycroftai':
         po_basename = 'skill-' + skill_name[8:-10] + '-ca.po'
-        po_filename = POFILES_DIR + po_basename
+        po_filename = os.path.join(POFILES_DIR, po_basename)
 
     elif skill_name[-10:] == '.mycroftai':
         po_basename = skill_name[:-10] + '-ca.po'
@@ -176,8 +177,9 @@ def write_nonlocale_translations(path, subdir, translations):
                 lines = lines + line + '\n'
 
             if lines != '':
-                pathlib.Path(path + '/' + subdir + '/' + MYCROFT_LOCALE).mkdir(
-                    parents=True, exist_ok=True)
+                p = path + '/' + subdir + '/' + MYCROFT_LOCALE
+                if not os.path.isdir(p):
+                    pathlib.Path(p).mkdir(parents=True)
 
                 with open(
                         path + '/' + subdir + '/' + MYCROFT_LOCALE + '/' + file,
@@ -189,9 +191,10 @@ def write_nonlocale_translations(path, subdir, translations):
 
 
 def get_new_translations(path, pofile):
-    pathlib.Path(path + '/' + MYCROFT_LOCALE).mkdir(parents=True,
-                                                    exist_ok=True)
-
+    p = path + '/' + MYCROFT_LOCALE
+    if not os.path.isdir(p):
+        pathlib.Path(p).mkdir(parents=True)
+        
     return
 
 
